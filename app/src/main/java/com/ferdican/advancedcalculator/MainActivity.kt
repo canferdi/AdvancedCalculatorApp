@@ -2,6 +2,7 @@ package com.ferdican.advancedcalculator
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -23,7 +24,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var printNum = ""
     private var tempNum = ""
     private var num1 = 0.0
     private var num2Str = ""
@@ -31,48 +31,64 @@ class MainActivity : AppCompatActivity() {
     private var isCalculated = false
 
     fun division(view: View) {
-        isCalculated = true
-        num1 = tempNum.toDouble()
-        tempNum += "÷"
-        binding.textViewOperationWindow.text = tempNum
-        operation = "÷"
+        if(!isCalculated){
+            num1 = tempNum.toDouble()
+            tempNum += "÷"
+            binding.textViewOperationWindow.text = tempNum
+            operation = "division"
+            isCalculated = true
+        }
     }
 
     fun multiplication(view: View) {
-        isCalculated = true
-        num1 = tempNum.toDouble()
-        tempNum += "×"
-        binding.textViewOperationWindow.text = tempNum
-        operation = "×"
+        if(!isCalculated){
+            num1 = tempNum.toDouble()
+            tempNum += "×"
+            binding.textViewOperationWindow.text = tempNum
+            operation = "multiplication"
+            isCalculated = true
+        }
     }
 
     fun subtraction(view: View) {
-        isCalculated = true
-        num1 = tempNum.toDouble()
-        tempNum += "-"
-        binding.textViewOperationWindow.text = tempNum
-        operation = "-"
+        if(!isCalculated){
+            num1 = tempNum.toDouble()
+            tempNum += "-"
+            binding.textViewOperationWindow.text = tempNum
+            operation = "substraction"
+            isCalculated = true
+        }
     }
 
     fun addition(view: View) {
-        isCalculated = true
-        num1 = tempNum.toDouble()
-        tempNum += "+"
-        binding.textViewOperationWindow.text = tempNum
-        operation = "+"
+        if(!isCalculated){
+            num1 = tempNum.toDouble()
+            tempNum += "+"
+            binding.textViewOperationWindow.text = tempNum
+            operation = "addition"
+            isCalculated = true
+        }
     }
 
     fun equal(view: View) {
-        val num2 = num2Str.toDouble()
-        if (operation == "division") {
+        val num2 : Double? = num2Str.toDoubleOrNull()
+
+        if (operation == "division" && num2 != null) {
+            isCalculated=false
             binding.textViewOperationWindow.text = (num1 / num2).toString()
-        } else if (operation == "multiplication") {
+        } else if (operation == "multiplication" && num2 != null) {
+            isCalculated=false
             binding.textViewOperationWindow.text = (num1 * num2).toString()
-        } else if (operation == "substraction") {
+        } else if (operation == "substraction" && num2 != null) {
+            isCalculated=false
             binding.textViewOperationWindow.text = (num1 - num2).toString()
-        } else if (operation == "addition") {
+        } else if (operation == "addition" && num2 != null) {
+            isCalculated=false
             binding.textViewOperationWindow.text = (num1 + num2).toString()
+        } else{
+            Toast.makeText(this, "Please enter nums", Toast.LENGTH_SHORT).show()
         }
+
     }
 
     fun zero(view: View) {
@@ -81,6 +97,7 @@ class MainActivity : AppCompatActivity() {
             num2Str += "0"
         }
         binding.textViewOperationWindow.text = tempNum
+        isCalculated = false
     }
 
     fun one(view: View) {
