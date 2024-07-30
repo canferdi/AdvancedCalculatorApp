@@ -177,4 +177,8 @@ class MainActivity : AppCompatActivity() {
         binding.textViewOperationWindow.text = tempNum
     }
 
+    fun AC(view: View) {
+        
+    }
+
 }

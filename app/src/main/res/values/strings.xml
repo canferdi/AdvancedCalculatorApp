@@ -16,5 +16,9 @@
     <string name="seven">7</string>
     <string name="eight">8</string>
     <string name="nine">9</string>
+    <string name="AC">AC</string>
+    <string name="comma">,</string>
+    <string name="bracket">( )</string>
+    <string name="percent">%</string>
 
 </resources>
