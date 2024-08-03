@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             '-' -> result = firstNum - currentNum
             'x' -> result = firstNum * currentNum
             '÷' -> result = if (currentNum != 0.0) firstNum / currentNum else 0.0
-            '%' -> result = firstNum % currentNum
+            '%' -> result = currentNum % firstNum
         }
         showNum = result.toString()
         updateOperationWindow()
