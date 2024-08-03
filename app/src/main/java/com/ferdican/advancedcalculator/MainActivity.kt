@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // numbers click lambdas
-        binding.buttonOne.setOnClickListener { numberClick(it) }
+        binding.buttonZero.setOnClickListener { numberClick(it) }
         binding.buttonOne.setOnClickListener { numberClick(it) }
         binding.buttonTwo.setOnClickListener { numberClick(it) }
         binding.buttonThree.setOnClickListener { numberClick(it) }
@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         binding.buttonMultiplication.setOnClickListener { operatorClick(it) }
         binding.buttonSubtraction.setOnClickListener { operatorClick(it) }
         binding.buttonAddition.setOnClickListener { operatorClick(it) }
+        binding.buttonPercent.setOnClickListener { operatorClick(it) }
 
         // equal click lambda
         binding.buttonEquals.setOnClickListener { equal(it) }
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity() {
             '-' -> result = firstNum - currentNum
             'x' -> result = firstNum * currentNum
             '÷' -> result = if (currentNum != 0.0) firstNum / currentNum else 0.0
+            '%' -> result = firstNum % currentNum
         }
         showNum = result.toString()
         updateOperationWindow()
