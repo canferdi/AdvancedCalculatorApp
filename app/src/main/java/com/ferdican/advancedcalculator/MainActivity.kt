@@ -2,7 +2,7 @@ package com.ferdican.advancedcalculator
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,6 +11,10 @@ import com.ferdican.advancedcalculator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private var currentOperation = ""
+    private var firstNumber = ""
+    private var lastOperator = ' '
+    private var showNum = " "
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,163 +26,101 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // numbers click lambdas
+        binding.buttonOne.setOnClickListener { numberClick(it) }
+        binding.buttonOne.setOnClickListener { numberClick(it) }
+        binding.buttonTwo.setOnClickListener { numberClick(it) }
+        binding.buttonThree.setOnClickListener { numberClick(it) }
+        binding.buttonFour.setOnClickListener { numberClick(it) }
+        binding.buttonFive.setOnClickListener { numberClick(it) }
+        binding.buttonSix.setOnClickListener { numberClick(it) }
+        binding.buttonSeven.setOnClickListener { numberClick(it) }
+        binding.buttonEight.setOnClickListener { numberClick(it) }
+        binding.buttonNine.setOnClickListener { numberClick(it) }
+
+        //operators click lambdas
+        binding.buttonDivision.setOnClickListener { operatorClick(it) }
+        binding.buttonMultiplication.setOnClickListener { operatorClick(it) }
+        binding.buttonSubtraction.setOnClickListener { operatorClick(it) }
+        binding.buttonAddition.setOnClickListener { operatorClick(it) }
+
+        // equal click lambda
+        binding.buttonEquals.setOnClickListener { equal(it) }
+
+        // AC click lambda
+        binding.buttonAC.setOnClickListener { AC(it) }
+        binding.buttonBackSpace.setOnClickListener { backSpace(it) }
+
     }
 
-    private var tempNum = ""
-    private var num1 = 0.0
-    private var num2Str = ""
-    private var operation = ""
-    private var isCalculated = false
-
-    fun division(view: View) {
-        if(!isCalculated){
-            num1 = tempNum.toDouble()
-            tempNum += "÷"
-            binding.textViewOperationWindow.text = tempNum
-            operation = "division"
-            isCalculated = true
+    private fun numberClick(view: View) {
+        if (view is Button) {
+            val number = view.text.toString()
+            currentOperation += number
+            showNum += number
+            updateOperationWindow()
         }
     }
 
-    fun multiplication(view: View) {
-        if(!isCalculated){
-            num1 = tempNum.toDouble()
-            tempNum += "×"
-            binding.textViewOperationWindow.text = tempNum
-            operation = "multiplication"
-            isCalculated = true
+    private fun operatorClick(view: View) {
+        if (view is Button) {
+            val operator = view.text.toString()
+            if (currentOperation.isNotEmpty()) {
+                if (lastOperator != ' ') {
+                    calculateResult()
+                } else {
+                    firstNumber = currentOperation
+                    showNum += operator
+                    updateOperationWindow()
+                }
+                lastOperator = operator[0]
+                currentOperation = ""
+            }
         }
     }
 
-    fun subtraction(view: View) {
-        if(!isCalculated){
-            num1 = tempNum.toDouble()
-            tempNum += "-"
-            binding.textViewOperationWindow.text = tempNum
-            operation = "substraction"
-            isCalculated = true
+    private fun equal(view: View) {
+        if (lastOperator != ' ' && currentOperation.isNotEmpty()) {
+            calculateResult()
         }
     }
 
-    fun addition(view: View) {
-        if(!isCalculated){
-            num1 = tempNum.toDouble()
-            tempNum += "+"
-            binding.textViewOperationWindow.text = tempNum
-            operation = "addition"
-            isCalculated = true
+    private fun calculateResult() {
+        val currentNum = currentOperation.toDouble()
+        val firstNum = firstNumber.toDouble()
+        var result = 0.0
+        when (lastOperator) {
+            '+' -> result = firstNum + currentNum
+            '-' -> result = firstNum - currentNum
+            'x' -> result = firstNum * currentNum
+            '÷' -> result = if (currentNum != 0.0) firstNum / currentNum else 0.0
+        }
+        showNum = result.toString()
+        updateOperationWindow()
+        firstNumber = result.toString()
+        showNum = ""
+    }
+
+    private fun AC(view: View) {
+        currentOperation = ""
+        firstNumber = ""
+        showNum = " "
+        lastOperator = ' '
+        updateOperationWindow()
+    }
+
+    private fun backSpace(view: View) {
+        if (currentOperation.isNotEmpty()) {
+            currentOperation = currentOperation.dropLast(1)
+            showNum = showNum.dropLast(1)
+            updateOperationWindow()
         }
     }
 
-    fun equal(view: View) {
-        val num2 : Double? = num2Str.toDoubleOrNull()
-
-        if (operation == "division" && num2 != null) {
-            isCalculated=false
-            binding.textViewOperationWindow.text = (num1 / num2).toString()
-        } else if (operation == "multiplication" && num2 != null) {
-            isCalculated=false
-            binding.textViewOperationWindow.text = (num1 * num2).toString()
-        } else if (operation == "substraction" && num2 != null) {
-            isCalculated=false
-            binding.textViewOperationWindow.text = (num1 - num2).toString()
-        } else if (operation == "addition" && num2 != null) {
-            isCalculated=false
-            binding.textViewOperationWindow.text = (num1 + num2).toString()
-        } else{
-            Toast.makeText(this, "Please enter nums", Toast.LENGTH_SHORT).show()
-        }
-
+    private fun updateOperationWindow() {
+        binding.textViewOperationWindow.text = showNum
     }
 
-    fun zero(view: View) {
-        tempNum += "0"
-        if (isCalculated) {
-            num2Str += "0"
-        }
-        binding.textViewOperationWindow.text = tempNum
-        isCalculated = false
-    }
-
-    fun one(view: View) {
-        tempNum += "1"
-        if (isCalculated) {
-            num2Str += "1"
-        }
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun two(view: View) {
-        tempNum += "2"
-        if (isCalculated) {
-            num2Str += "2"
-        }
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun three(view: View) {
-        tempNum += "3"
-        if (isCalculated) {
-            num2Str += "3"
-        }
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun four(view: View) {
-        tempNum += "4"
-        if (isCalculated) {
-            num2Str += "4"
-        }
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun five(view: View) {
-        tempNum += "5"
-        if (isCalculated) {
-            num2Str += "5"
-        }
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun six(view: View) {
-        tempNum += "6"
-        if (isCalculated) {
-            num2Str += "6"
-        }
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun seven(view: View) {
-        tempNum += "7"
-        if (isCalculated) {
-            num2Str += "7"
-        }
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun eight(view: View) {
-        tempNum += "8"
-        if (isCalculated) {
-            num2Str += "8"
-        }
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun nine(view: View) {
-        tempNum += "9"
-        if (isCalculated) {
-            num2Str += "9"
-        }
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun backSpace(view: View) {
-        tempNum = tempNum.dropLast(1)
-        binding.textViewOperationWindow.text = tempNum
-    }
-
-    fun AC(view: View) {
-        
-    }
 
 }
